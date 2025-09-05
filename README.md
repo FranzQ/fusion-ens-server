@@ -1,16 +1,18 @@
-# ENS Testnet API Server
+# 🔗 Fusion ENS Server
 
-A Node.js TypeScript server that provides ENS resolution for testnet networks (Sepolia and Goerli).
+A powerful Node.js TypeScript server that provides ENS resolution for both mainnet and testnet networks with multi-chain support.
 
-## Features
+## ✨ Features
 
-- ✅ ENS name resolution for testnet networks
-- ✅ Reverse ENS lookup (address to name)
-- ✅ Domain information retrieval
-- ✅ Support for Sepolia and Goerli testnets
-- ✅ RESTful API endpoints
-- ✅ CORS enabled for browser extensions
-- ✅ TypeScript for type safety
+- ✅ **Multi-Network Support**: Mainnet and Sepolia testnet
+- ✅ **Multi-Chain Resolution**: 15+ supported blockchain networks
+- ✅ **ENS Name Resolution**: Standard .eth domain resolution
+- ✅ **Reverse ENS Lookup**: Address to name resolution
+- ✅ **Domain Information**: Detailed domain metadata
+- ✅ **RESTful API**: Clean, consistent endpoints
+- ✅ **CORS Enabled**: Browser extension integration
+- ✅ **TypeScript**: Full type safety and IntelliSense
+- ✅ **DNSSEC Ready**: Infrastructure for security validation
 
 ## Quick Start
 
@@ -24,6 +26,12 @@ A Node.js TypeScript server that provides ENS resolution for testnet networks (S
    cp env.example .env
    ```
    Edit `.env` with your RPC URLs (Infura, Alchemy, etc.)
+   
+   **Required Environment Variables:**
+   ```env
+   MAINNET_RPC_URL=https://eth-mainnet.g.alchemy.com/v2/YOUR_API_KEY
+   SEPOLIA_RPC_URL=https://eth-sepolia.g.alchemy.com/v2/YOUR_API_KEY
+   ```
 
 3. **Run in development mode:**
    ```bash
@@ -46,13 +54,20 @@ Returns server status and timestamp.
 
 ### Resolve ENS Name
 ```
-GET /resolve/:domainName?network=sepolia
+GET /resolve/:domainName?network=mainnet
 ```
-Resolves an ENS name to an Ethereum address.
+Resolves an ENS name to an Ethereum address or multi-chain address.
 
-**Example:**
+**Examples:**
 ```bash
+# Mainnet resolution
+curl "http://localhost:3001/resolve/vitalik.eth?network=mainnet"
+
+# Testnet resolution  
 curl "http://localhost:3001/resolve/test.eth?network=sepolia"
+
+# Multi-chain resolution
+curl "http://localhost:3001/resolve/vitalik.btc?network=mainnet"
 ```
 
 **Response:**
@@ -69,12 +84,16 @@ curl "http://localhost:3001/resolve/test.eth?network=sepolia"
 
 ### Get Domain Information
 ```
-GET /domain/:domainName?network=sepolia
+GET /domain/:domainName?network=mainnet
 ```
 Returns detailed information about an ENS domain.
 
-**Example:**
+**Examples:**
 ```bash
+# Mainnet domain info
+curl "http://localhost:3001/domain/vitalik.eth?network=mainnet"
+
+# Testnet domain info
 curl "http://localhost:3001/domain/test.eth?network=sepolia"
 ```
 
@@ -94,12 +113,16 @@ curl "http://localhost:3001/domain/test.eth?network=sepolia"
 
 ### Reverse Lookup
 ```
-GET /reverse/:address?network=sepolia
+GET /reverse/:address?network=mainnet
 ```
 Resolves an Ethereum address to an ENS name.
 
-**Example:**
+**Examples:**
 ```bash
+# Mainnet reverse lookup
+curl "http://localhost:3001/reverse/0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045?network=mainnet"
+
+# Testnet reverse lookup
 curl "http://localhost:3001/reverse/0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6?network=sepolia"
 ```
 
@@ -117,38 +140,64 @@ curl "http://localhost:3001/reverse/0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6?n
 
 ## Supported Networks
 
-- **Sepolia** (default) - Current Ethereum testnet
-- **Goerli** - Legacy testnet (deprecated but still supported)
+- **Mainnet** (default) - Ethereum mainnet with full ENS support
+- **Sepolia** - Current Ethereum testnet
+
+## Multi-Chain Support
+
+The server supports resolution for multiple blockchain networks:
+
+- **Ethereum**: `.eth` domains
+- **Bitcoin**: `.btc` domains
+- **Solana**: `.sol` domains
+- **Base**: `.base` domains
+- **Arbitrum**: `.arbi` domains
+- **Polygon**: `.polygon` domains
+- **Avalanche**: `.avax` domains
+- **BSC**: `.bsc` domains
+- **Optimism**: `.op` domains
+- **Zora**: `.zora` domains
+- **Linea**: `.linea` domains
+- **Scroll**: `.scroll` domains
+- **Mantle**: `.mantle` domains
+- **Celo**: `.celo` domains
+- **Gnosis**: `.gnosis` domains
+- **Fantom**: `.fantom` domains
 
 ## Environment Variables
 
 Create a `.env` file with the following variables:
 
 ```env
-# RPC URLs
-SEPOLIA_RPC_URL=https://sepolia.infura.io/v3/YOUR_PROJECT_ID
-GOERLI_RPC_URL=https://goerli.infura.io/v3/YOUR_PROJECT_ID
+# RPC URLs (Required)
+MAINNET_RPC_URL=https://eth-mainnet.g.alchemy.com/v2/YOUR_API_KEY
+SEPOLIA_RPC_URL=https://eth-sepolia.g.alchemy.com/v2/YOUR_API_KEY
 
 # Server configuration
 PORT=3001
 NODE_ENV=development
 
-# ENS Registry addresses (usually the same for testnets)
+# ENS Registry addresses (optional - defaults provided)
+MAINNET_ENS_REGISTRY=0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e
 SEPOLIA_ENS_REGISTRY=0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e
-GOERLI_ENS_REGISTRY=0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e
 ```
+
+**RPC Provider Options:**
+- **Alchemy**: `https://eth-mainnet.g.alchemy.com/v2/YOUR_API_KEY`
+- **Infura**: `https://mainnet.infura.io/v3/YOUR_PROJECT_ID`
+- **Public RPC**: `https://ethereum.publicnode.com`
 
 ## Integration with Browser Extension
 
-Update your browser extension to use this local server for testnet resolution:
+The server is designed to work seamlessly with the Fusion ENS browser extension:
 
 ```javascript
 // In your extension's popup.js or background.js
-const testnetApiUrl = 'http://localhost:3001';
+const apiUrl = 'http://localhost:3001';
 
-async function resolveTestnetENS(domainName) {
+async function resolveENS(domainName, network = 'mainnet') {
   try {
-    const response = await fetch(`${testnetApiUrl}/resolve/${domainName}?network=sepolia`);
+    const response = await fetch(`${apiUrl}/resolve/${domainName}?network=${network}`);
     const data = await response.json();
     
     if (data.success) {
@@ -156,10 +205,15 @@ async function resolveTestnetENS(domainName) {
     }
     return null;
   } catch (error) {
-    console.error('Testnet resolution failed:', error);
+    console.error('ENS resolution failed:', error);
     return null;
   }
 }
+
+// Usage examples
+resolveENS('vitalik.eth', 'mainnet');     // Mainnet resolution
+resolveENS('test.eth', 'sepolia');        // Testnet resolution
+resolveENS('vitalik.btc', 'mainnet');     // Multi-chain resolution
 ```
 
 ## Development
