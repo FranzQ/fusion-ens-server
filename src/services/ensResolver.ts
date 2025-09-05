@@ -24,6 +24,11 @@ export class ENSResolver {
                 rpcUrl: process.env.SEPOLIA_RPC_URL || 'https://sepolia.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
                 ensRegistry: process.env.SEPOLIA_ENS_REGISTRY || '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
                 name: 'Sepolia'
+            },
+            mainnet: {
+                rpcUrl: process.env.MAINNET_RPC_URL || 'https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
+                ensRegistry: process.env.MAINNET_ENS_REGISTRY || '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+                name: 'Mainnet'
             }
         };
 
@@ -60,7 +65,7 @@ export class ENSResolver {
     /**
  * Resolve an ENS name to an Ethereum address or multi-chain address
  */
-    async resolveName(domainName: string, network: string = 'sepolia'): Promise<string | null> {
+    async resolveName(domainName: string, network: string = 'mainnet'): Promise<string | null> {
         try {
             const provider = this.getProvider(network);
             const config = this.getNetworkConfig(network);
@@ -248,7 +253,7 @@ export class ENSResolver {
     /**
      * Get detailed domain information
      */
-    async getDomainInfo(domainName: string, network: string = 'sepolia'): Promise<DomainInfo | null> {
+    async getDomainInfo(domainName: string, network: string = 'mainnet'): Promise<DomainInfo | null> {
         try {
             const provider = this.getProvider(network);
             const config = this.getNetworkConfig(network);
@@ -288,7 +293,7 @@ export class ENSResolver {
     /**
      * Reverse resolve an address to an ENS name
      */
-    async reverseResolve(address: string, network: string = 'sepolia'): Promise<string | null> {
+    async reverseResolve(address: string, network: string = 'mainnet'): Promise<string | null> {
         try {
             const provider = this.getProvider(network);
             const config = this.getNetworkConfig(network);

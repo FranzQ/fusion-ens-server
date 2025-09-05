@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { ENSResolver } from './services/ensResolver';
+import { ENSResolver } from './services/ensResolver.ts';
 
 // Load environment variables
 dotenv.config();
@@ -21,7 +21,7 @@ app.get('/health', (req, res) => {
     res.json({
         status: 'healthy',
         timestamp: new Date().toISOString(),
-        service: 'ENS Testnet API Server'
+        service: 'ENS API Server'
     });
 });
 
@@ -29,7 +29,7 @@ app.get('/health', (req, res) => {
 app.get('/resolve/:domainName', async (req, res) => {
     try {
         const { domainName } = req.params;
-        const { network = 'sepolia' } = req.query;
+        const { network = 'mainnet' } = req.query;
 
         if (!domainName) {
             return res.status(400).json({
@@ -68,7 +68,7 @@ app.get('/resolve/:domainName', async (req, res) => {
 app.get('/domain/:domainName', async (req, res) => {
     try {
         const { domainName } = req.params;
-        const { network = 'sepolia' } = req.query;
+        const { network = 'mainnet' } = req.query;
 
         if (!domainName) {
             return res.status(400).json({
@@ -103,7 +103,7 @@ app.get('/domain/:domainName', async (req, res) => {
 app.get('/reverse/:address', async (req, res) => {
     try {
         const { address } = req.params;
-        const { network = 'sepolia' } = req.query;
+        const { network = 'mainnet' } = req.query;
 
         if (!address || !address.startsWith('0x')) {
             return res.status(400).json({
@@ -140,13 +140,13 @@ app.get('/reverse/:address', async (req, res) => {
 
 // Start server
 app.listen(port, () => {
-    console.log(`🚀 ENS Testnet API Server running on port ${port}`);
-    console.log(`📡 Available networks: sepolia`);
+    console.log(`🚀 ENS API Server running on port ${port}`);
+    console.log(`📡 Available networks: mainnet, sepolia`);
     console.log(`🔗 Health check: http://localhost:${port}/health`);
     console.log(`📋 API docs:`);
-    console.log(`   GET /resolve/:domainName?network=sepolia`);
-    console.log(`   GET /domain/:domainName?network=sepolia`);
-    console.log(`   GET /reverse/:address?network=sepolia`);
+    console.log(`   GET /resolve/:domainName?network=mainnet`);
+    console.log(`   GET /domain/:domainName?network=mainnet`);
+    console.log(`   GET /reverse/:address?network=mainnet`);
 });
 
 export default app;

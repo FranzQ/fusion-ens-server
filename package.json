@@ -1,15 +1,16 @@
 {
-    "name": "ens-testnet-server",
+    "name": "ens-server",
     "version": "1.0.0",
-    "description": "ENS Testnet Resolution API Server",
+    "description": "ENS Resolution API Server",
+    "type": "module",
     "main": "dist/index.js",
     "scripts": {
       "build": "tsc",
       "start": "node dist/index.js",
-      "dev": "ts-node src/index.ts",
+      "dev": "ts-node --esm src/index.ts",
       "watch": "tsc --watch"
     },
-    "keywords": ["ens", "testnet", "sepolia", "ethereum", "api"],
+    "keywords": ["ens", "mainnet", "testnet", "sepolia", "ethereum", "api"],
     "author": "",
     "license": "MIT",
     "dependencies": {
