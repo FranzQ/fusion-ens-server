@@ -2,11 +2,13 @@
 
 ## 🎯 **What We Built**
 
-A Node.js TypeScript server that provides ENS (Ethereum Name Service) resolution API endpoints. The server can resolve ENS names to Ethereum addresses and perform reverse lookups on both mainnet and Sepolia testnet.
+A Node.js TypeScript server that provides ENS (Ethereum Name Service) resolution API endpoints with **multi-chain address decoding**. The server can resolve ENS names to addresses across multiple blockchains using the new `name.eth:chain` format and perform reverse lookups on both mainnet and Sepolia testnet.
 
 ## ✨ **Key Features**
 
-- **ENS Resolution**: Resolves ENS names (like `vitalik.eth`) to Ethereum addresses
+- **Multi-Chain ENS Resolution**: Resolves ENS names to addresses across 20+ blockchains
+- **Format Support**: `name.eth:chain` format (e.g., `onshow.eth:btc`, `ses.eth:sol`)
+- **Proper Address Decoding**: Human-readable addresses for Bitcoin, Solana, Dogecoin, and Ethereum-compatible chains
 - **Reverse Lookup**: Resolves Ethereum addresses back to ENS names
 - **Multi-Network Support**: Works with Ethereum mainnet and Sepolia testnet
 - **RESTful API**: Simple HTTP endpoints for ENS operations
@@ -28,6 +30,9 @@ A Node.js TypeScript server that provides ENS (Ethereum Name Service) resolution
 ### **Dependencies**
 - **express**: Web server framework
 - **ethers**: Ethereum library for blockchain interaction
+- **bitcoinjs-lib**: Bitcoin address decoding and validation
+- **@solana/web3.js**: Solana address decoding
+- **bs58**: Base58 encoding for Bitcoin-like addresses
 - **cors**: Cross-origin resource sharing
 - **dotenv**: Environment variable management
 
@@ -43,20 +48,40 @@ Returns server status and timestamp.
 ```
 GET /resolve/:domainName?network=mainnet
 ```
-Resolves an ENS name to an Ethereum address.
+Resolves an ENS name to an address. Supports both traditional ENS names and the new multi-chain format.
 
-**Example:**
+**Examples:**
+
+**Traditional ENS (Ethereum):**
 ```bash
 curl "http://localhost:3001/resolve/vitalik.eth?network=mainnet"
 ```
 
-**Response:**
+**Multi-Chain Format:**
+```bash
+curl "http://localhost:3001/resolve/onshow.eth:btc?network=mainnet"
+curl "http://localhost:3001/resolve/onshow.eth:sol?network=mainnet"
+curl "http://localhost:3001/resolve/onshow.eth:doge?network=mainnet"
+```
+
+**Responses:**
 ```json
 {
   "success": true,
   "data": {
     "name": "vitalik.eth",
     "address": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+    "network": "mainnet"
+  }
+}
+```
+
+```json
+{
+  "success": true,
+  "data": {
+    "name": "onshow.eth:btc",
+    "address": "bc1q9qg9exzzgcsv2x3ew34wxaszsqlsuyxcdxxuxc",
     "network": "mainnet"
   }
 }
@@ -83,6 +108,34 @@ Resolves an Ethereum address to an ENS name.
 ```bash
 curl "http://localhost:3001/reverse/0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045?network=mainnet"
 ```
+
+## 🔗 **Supported Blockchains**
+
+### **Fully Decoded (Human-Readable Addresses)**
+- **Bitcoin (btc)** - P2PKH, P2WPKH, P2TR formats
+- **Solana (sol)** - 32-byte public key to Base58
+- **Dogecoin (doge)** - P2PKH with Dogecoin network parameters
+
+### **Ethereum-Compatible (20-byte addresses)**
+- **Ethereum (eth)** - Standard Ethereum addresses
+- **Base (base)** - Base network addresses
+- **Arbitrum (arbi)** - Arbitrum network addresses
+- **Polygon (polygon)** - Polygon network addresses
+- **Avalanche (avax)** - Avalanche network addresses
+- **BSC (bsc)** - Binance Smart Chain addresses
+- **Optimism (op)** - Optimism network addresses
+
+### **Supported but Raw Hex Output**
+- **XRP (xrp)** - Coin type 144
+- **Litecoin (ltc)** - Coin type 2
+- **Cardano (ada)** - Coin type 1815
+- **Zora (zora)** - Coin type 7777777
+- **Linea (linea)** - Coin type 59144
+- **Scroll (scroll)** - Coin type 534352
+- **Mantle (mantle)** - Coin type 5000
+- **Celo (celo)** - Coin type 42220
+- **Gnosis (gnosis)** - Coin type 100
+- **Fantom (fantom)** - Coin type 250
 
 ## 🚀 **How to Run**
 
@@ -116,6 +169,9 @@ PORT=3001
 
 ## 🎯 **Problem Solved**
 
+- **Multi-Chain ENS Resolution**: Resolves ENS names to addresses across 20+ blockchains
+- **New Format Support**: Implements the `name.eth:chain` format for multi-chain resolution
+- **Proper Address Decoding**: Converts raw ENS bytes to human-readable addresses
 - **Centralized ENS Resolution**: Provides a single API endpoint for ENS operations
 - **Multi-Network Support**: Handles both mainnet and testnet resolution
 - **Simple Integration**: Easy-to-use REST API for applications
@@ -124,6 +180,9 @@ PORT=3001
 ## 📊 **Current Status**
 
 - ✅ **Working Server**: Fully functional ENS resolution API
+- ✅ **Multi-Chain Support**: Resolves addresses across 20+ blockchains
+- ✅ **New Format**: `name.eth:chain` format fully implemented
+- ✅ **Address Decoding**: Proper decoding for Bitcoin, Solana, Dogecoin, and Ethereum-compatible chains
 - ✅ **Mainnet Support**: Resolves ENS names on Ethereum mainnet
 - ✅ **Testnet Support**: Works with Sepolia testnet
 - ✅ **Reverse Lookup**: Address to name resolution
@@ -133,7 +192,8 @@ PORT=3001
 
 - **Platform**: Node.js with TypeScript
 - **Framework**: Express.js
-- **Blockchain**: Ethereum (mainnet + Sepolia)
+- **Blockchain**: Ethereum (mainnet + Sepolia) with multi-chain address decoding
+- **Address Decoding**: Bitcoin (bitcoinjs-lib), Solana (@solana/web3.js), Base58 (bs58)
 - **Port**: 3001 (configurable)
 - **CORS**: Enabled for browser extension integration
 

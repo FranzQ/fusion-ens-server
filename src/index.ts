@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { ENSResolver } from './services/ensResolver.ts';
+import { ENSResolver } from './services/ensResolver.js';
 
 // Load environment variables
 dotenv.config();
